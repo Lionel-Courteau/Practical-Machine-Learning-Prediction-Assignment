@@ -23,7 +23,7 @@ library(rattle)
 ### 3. Load Data
 Load the dataset.
 ```{r results='hide', message=FALSE}
-
+# Could not download the training file via URLcode, had to download manually into the project folder
 TrainData <- read.csv("pml-training.csv",header=TRUE)
 dim(TrainData)
 TestData <- read.csv(url("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"),header=TRUE)
