@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>14c8a56b57f849e29c965f70c9025b4d</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">title: " Practical Machine Learning - Prediction Assignment Writeup"</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">author: “Lionel Courteau”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">date: “October 10, 2021”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">output: Rmd</td>
+</tr>
+</tbody>
+</table>
+<p>### 1. Executive Summary</p>
+<p>This is a report of the Peer Assessment project from the Practical Machine Learning course. The goal of this analysis is to predict the manner in which the six participants performed their exercises. The machine learning algorithm, uses the “classe” variable in the training set, is applied to the 20 test cases available in the test data.</p>
+<h3 id="libraries">2. Libraries</h3>
+<p><code>{r results='hide', message=FALSE} library(knitr) library(ggplot2) library(lattice) library(plotly) library(corrplot) library(caret) library(rattle)</code></p>
+<h3 id="load-data">3. Load Data</h3>
+<p>Load the dataset. ```{r results=‘hide’, message=FALSE}</p>
+<p>TrainData &lt;- read.csv(“pml-training.csv”,header=TRUE) dim(TrainData) TestData &lt;- read.csv(url(“https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv”),header=TRUE) dim(TestData)</p>
+<pre><code>
+### 4. Create a partition of the traning data set and clean data
+
+```{r  message=FALSE}
+
+# The training dataset is  partitioned into 2 to create a Training set with 70% of the data for the modeling process.  A Test set is created with the remaining 30% for the validations.
+
+
+set.seed(32343)
+inTrain &lt;- createDataPartition(TrainData$classe, p = 0.7, list = FALSE)
+trainData &lt;- TrainData[inTrain, ]
+testData &lt;- TrainData[-inTrain, ]
+dim(trainData)
+dim(testData)
+
+
+# trainData and testData have a large number of NA values and near-zero-variance (NZV) variables. Remove both.
+
+
+NZV &lt;- nearZeroVar(trainData)
+trainData &lt;- trainData[, -NZV]
+testData  &lt;- testData[, -NZV]
+dim(trainData)
+dim(testData)
+
+
+# Remove variables that are mostly NA. A threshlod of 95 % is selected.
+mostlyNA &lt;- sapply(trainData, function(x) mean(is.na(x))) &gt; 0.95
+mostlyNATest &lt;- sapply(testData, function(x) mean(is.na(x))) &gt; 0.95
+trainData &lt;- trainData[, mostlyNA==F]
+testData &lt;- testData[, mostlyNATest==F]
+
+dim(trainData)
+dim(testData)
+
+# Remove identification only variables (columns 1 to 5)The highly correlated variables are shown in dark colors in the graph above. To make an even more compact analysis, a PCA (Principal Components Analysis) could be performed as a pre-processing step to the datasets. Nevertheless, as the correlations are quite few, this step will not be applied for this assignment.
+trainData &lt;- trainData[, -(1:5)]
+testData &lt;- testData[, -(1:5)]
+
+dim(trainData)
+dim(testData)
+</code></pre>
+<h3 id="data-analysis">5. Data Analysis</h3>
+<h4 id="a-check-correlation-among-variables">a) Check correlation among variables</h4>
+<p>```{r results=‘hide’, message=FALSE}</p>
+<p>correlation &lt;- cor(trainData[, -54]) corrplot(correlation, method=“circle”)</p>
+<h1 id="the-circles-with-dark-colors-show-highly-correlated-variables-in-the-graph-above.-correlations-do-not-seem-to-give-any-analysis-points-as-they-are-very-less.">The circles with dark colors show highly correlated variables in the graph above. Correlations do not seem to give any analysis points as they are very less.</h1>
+<pre><code>
+#### b) Classification tree method
+
+
+```{r message=FALSE}
+
+trControl &lt;- trainControl(method=&quot;cv&quot;, number=5)
+model_CT &lt;- train(classe~., , method=&quot;rpart&quot;, data=trainData, trControl=trControl)
+
+plot(model_CT$finalModel)
+
+predict_train &lt;- predict(model_CT,newdata=testData)
+
+confMatClassTree &lt;- confusionMatrix(testData$classe,predict_train)
+
+#Display confusion matrix and model accuracy
+
+confMatClassTree$table
+
+confMatClassTree$overall[1]
+</code></pre>
+<h4 id="c-random-forest-method">c) Random forest method</h4>
+<p>```{r message=FALSE} random_forest &lt;- trainControl(method=“cv”, number=3, verboseIter=FALSE) model_RF1 &lt;- train(classe ~ ., data=trainData, method=“rf”, trControl=random_forest) model_RF1$finalModel plot(model_RF1,main=“Accuracy of Random forest model by number of predictors”)</p>
+<p>predict_train &lt;- predict(model_RF1,newdata=testData)</p>
+<p>confMatRF &lt;- confusionMatrix(testData$classe,predict_train)</p>
+<h1 id="display-confusion-matrix-and-model-accuracy">Display confusion matrix and model accuracy</h1>
+<p>confMatRF</p>
+<p>plot(model_RF1$finalModel)</p>
+<pre><code>
+#### d) Generated Boosted Model (GBM)
+
+```{r  message=FALSE}
+set.seed(12345)
+GBM &lt;- trainControl(method = &quot;repeatedcv&quot;, number = 5, repeats = 1)
+model_GBM  &lt;- train(classe ~ ., data=trainData, method = &quot;gbm&quot;, trControl = GBM, verbose = FALSE)
+model_GBM$finalModel
+
+predictGBM &lt;- predict(model_GBM, newdata=testData)
+confMatGBM &lt;- confusionMatrix(predictGBM, testData$classe)
+confMatGBM</code></pre>
+<h3 id="conclusion">6. Conclusion</h3>
+<p>```{r message=FALSE}</p>
+<h1 id="the-predictive-accuracy-of-the-above-methods-are">The predictive accuracy of the above methods are:</h1>
+<p>#Classification Tree Model: 49.62 % #Generalized Boosted Model: 98.96 %<br />
+#Random Forest Model: 99.71 % # #The Random Forest model has the best accuracy and hence it is used for predictions on the 20 data points from the original testing dataset.</p>
+<p>predict_test &lt;- predict(model_RF1, newdata = TestData) predict_test ```</p>
+</body>
+</html>
